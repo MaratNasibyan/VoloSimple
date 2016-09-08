@@ -1,0 +1,509 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="BookDatabaseModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AttributeBooks">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BooksId" Type="int" Nullable="false" />
+          <Property Name="AttributesId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Attributes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AttributeType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Type" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="AttributeValue">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="value" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="AttributeId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Authors">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FullName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DateBirth" Type="date" />
+        </EntityType>
+        <EntityType Name="Books">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Price" Type="money" Nullable="false" />
+          <Property Name="Description" Type="nvarchar(max)" />
+          <Property Name="PagesCount" Type="int" />
+          <Property Name="CountryPublishedId" Type="int" Nullable="false" />
+          <Property Name="AuthorsId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="CountryPublished">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CountryName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="IsoCode" Type="nvarchar" MaxLength="3" />
+          <Property Name="PhoneCode" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ImagePatchs">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ImageUrl" Type="nvarchar(max)" />
+          <Property Name="BooksId" Type="int" />
+        </EntityType>
+        <Association Name="FK_AttributesBooks">
+          <End Role="Attributes" Type="Self.Attributes" Multiplicity="1" />
+          <End Role="AttributeBooks" Type="Self.AttributeBooks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Attributes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AttributeBooks">
+              <PropertyRef Name="AttributesId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AttributesType_Attributes">
+          <End Role="Attributes" Type="Self.Attributes" Multiplicity="1" />
+          <End Role="AttributeType" Type="Self.AttributeType" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Attributes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AttributeType">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AttributeValue_Attributes">
+          <End Role="Attributes" Type="Self.Attributes" Multiplicity="1" />
+          <End Role="AttributeValue" Type="Self.AttributeValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Attributes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AttributeValue">
+              <PropertyRef Name="AttributeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Books_Authors">
+          <End Role="Authors" Type="Self.Authors" Multiplicity="1" />
+          <End Role="Books" Type="Self.Books" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Authors">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Books">
+              <PropertyRef Name="AuthorsId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Books_PublishedCountry">
+          <End Role="CountryPublished" Type="Self.CountryPublished" Multiplicity="1" />
+          <End Role="Books" Type="Self.Books" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CountryPublished">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Books">
+              <PropertyRef Name="CountryPublishedId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BooksAttributes">
+          <End Role="Books" Type="Self.Books" Multiplicity="1" />
+          <End Role="AttributeBooks" Type="Self.AttributeBooks" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Books">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AttributeBooks">
+              <PropertyRef Name="BooksId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ImagePatchs_Books">
+          <End Role="Books" Type="Self.Books" Multiplicity="0..1" />
+          <End Role="ImagePatchs" Type="Self.ImagePatchs" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Books">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ImagePatchs">
+              <PropertyRef Name="BooksId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BookDatabaseModelStoreContainer">
+          <EntitySet Name="AttributeBooks" EntityType="Self.AttributeBooks" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Attributes" EntityType="Self.Attributes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AttributeType" EntityType="Self.AttributeType" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="AttributeValue" EntityType="Self.AttributeValue" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Authors" EntityType="Self.Authors" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Books" EntityType="Self.Books" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="CountryPublished" EntityType="Self.CountryPublished" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="ImagePatchs" EntityType="Self.ImagePatchs" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_AttributesBooks" Association="Self.FK_AttributesBooks">
+            <End Role="Attributes" EntitySet="Attributes" />
+            <End Role="AttributeBooks" EntitySet="AttributeBooks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AttributesType_Attributes" Association="Self.FK_AttributesType_Attributes">
+            <End Role="Attributes" EntitySet="Attributes" />
+            <End Role="AttributeType" EntitySet="AttributeType" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AttributeValue_Attributes" Association="Self.FK_AttributeValue_Attributes">
+            <End Role="Attributes" EntitySet="Attributes" />
+            <End Role="AttributeValue" EntitySet="AttributeValue" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Books_Authors" Association="Self.FK_Books_Authors">
+            <End Role="Authors" EntitySet="Authors" />
+            <End Role="Books" EntitySet="Books" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Books_PublishedCountry" Association="Self.FK_Books_PublishedCountry">
+            <End Role="CountryPublished" EntitySet="CountryPublished" />
+            <End Role="Books" EntitySet="Books" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BooksAttributes" Association="Self.FK_BooksAttributes">
+            <End Role="Books" EntitySet="Books" />
+            <End Role="AttributeBooks" EntitySet="AttributeBooks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ImagePatchs_Books" Association="Self.FK_ImagePatchs_Books">
+            <End Role="Books" EntitySet="Books" />
+            <End Role="ImagePatchs" EntitySet="ImagePatchs" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="BookDatabaseModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="AttributeBook">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BooksId" Type="Int32" Nullable="false" />
+          <Property Name="AttributesId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Attribute" Relationship="Self.FK_AttributesBooks" FromRole="AttributeBooks" ToRole="Attributes" />
+          <NavigationProperty Name="Book" Relationship="Self.FK_BooksAttributes" FromRole="AttributeBooks" ToRole="Books" />
+        </EntityType>
+        <EntityType Name="Attribute">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="AttributeBooks" Relationship="Self.FK_AttributesBooks" FromRole="Attributes" ToRole="AttributeBooks" />
+          <NavigationProperty Name="AttributeType" Relationship="Self.FK_AttributesType_Attributes" FromRole="Attributes" ToRole="AttributeType" />
+          <NavigationProperty Name="AttributeValues" Relationship="Self.FK_AttributeValue_Attributes" FromRole="Attributes" ToRole="AttributeValue" />
+        </EntityType>
+        <EntityType Name="AttributeType">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <NavigationProperty Name="Attribute" Relationship="Self.FK_AttributesType_Attributes" FromRole="AttributeType" ToRole="Attributes" />
+        </EntityType>
+        <EntityType Name="AttributeValue">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="value" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="AttributeId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Attribute" Relationship="Self.FK_AttributeValue_Attributes" FromRole="AttributeValue" ToRole="Attributes" />
+        </EntityType>
+        <EntityType Name="Author">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FullName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DateBirth" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="Books" Relationship="Self.FK_Books_Authors" FromRole="Authors" ToRole="Books" />
+        </EntityType>
+        <EntityType Name="Book">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Price" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PagesCount" Type="Int32" />
+          <Property Name="CountryPublishedId" Type="Int32" Nullable="false" />
+          <Property Name="AuthorsId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="AttributeBooks" Relationship="Self.FK_BooksAttributes" FromRole="Books" ToRole="AttributeBooks" />
+          <NavigationProperty Name="Author" Relationship="Self.FK_Books_Authors" FromRole="Books" ToRole="Authors" />
+          <NavigationProperty Name="CountryPublished" Relationship="Self.FK_Books_PublishedCountry" FromRole="Books" ToRole="CountryPublished" />
+          <NavigationProperty Name="ImagePatchs" Relationship="Self.FK_ImagePatchs_Books" FromRole="Books" ToRole="ImagePatchs" />
+        </EntityType>
+        <EntityType Name="CountryPublished">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CountryName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="IsoCode" Type="String" MaxLength="3" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneCode" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Books" Relationship="Self.FK_Books_PublishedCountry" FromRole="CountryPublished" ToRole="Books" />
+        </EntityType>
+        <EntityType Name="ImagePatch">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ImageUrl" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="BooksId" Type="Int32" />
+          <NavigationProperty Name="Book" Relationship="Self.FK_ImagePatchs_Books" FromRole="ImagePatchs" ToRole="Books" />
+        </EntityType>
+        <Association Name="FK_AttributesBooks">
+          <End Role="Attributes" Type="Self.Attribute" Multiplicity="1" />
+          <End Role="AttributeBooks" Type="Self.AttributeBook" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Attributes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AttributeBooks">
+              <PropertyRef Name="AttributesId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_BooksAttributes">
+          <End Role="Books" Type="Self.Book" Multiplicity="1" />
+          <End Role="AttributeBooks" Type="Self.AttributeBook" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Books">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AttributeBooks">
+              <PropertyRef Name="BooksId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AttributesType_Attributes">
+          <End Role="Attributes" Type="Self.Attribute" Multiplicity="1" />
+          <End Role="AttributeType" Type="Self.AttributeType" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="Attributes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AttributeType">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_AttributeValue_Attributes">
+          <End Role="Attributes" Type="Self.Attribute" Multiplicity="1" />
+          <End Role="AttributeValue" Type="Self.AttributeValue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Attributes">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AttributeValue">
+              <PropertyRef Name="AttributeId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Books_Authors">
+          <End Role="Authors" Type="Self.Author" Multiplicity="1" />
+          <End Role="Books" Type="Self.Book" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Authors">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Books">
+              <PropertyRef Name="AuthorsId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Books_PublishedCountry">
+          <End Role="CountryPublished" Type="Self.CountryPublished" Multiplicity="1" />
+          <End Role="Books" Type="Self.Book" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="CountryPublished">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Books">
+              <PropertyRef Name="CountryPublishedId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ImagePatchs_Books">
+          <End Role="Books" Type="Self.Book" Multiplicity="0..1" />
+          <End Role="ImagePatchs" Type="Self.ImagePatch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Books">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="ImagePatchs">
+              <PropertyRef Name="BooksId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="BookDatabaseEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AttributeBooks" EntityType="Self.AttributeBook" />
+          <EntitySet Name="Attributes" EntityType="Self.Attribute" />
+          <EntitySet Name="AttributeTypes" EntityType="Self.AttributeType" />
+          <EntitySet Name="AttributeValues" EntityType="Self.AttributeValue" />
+          <EntitySet Name="Authors" EntityType="Self.Author" />
+          <EntitySet Name="Books" EntityType="Self.Book" />
+          <EntitySet Name="CountryPublisheds" EntityType="Self.CountryPublished" />
+          <EntitySet Name="ImagePatchs" EntityType="Self.ImagePatch" />
+          <AssociationSet Name="FK_AttributesBooks" Association="Self.FK_AttributesBooks">
+            <End Role="Attributes" EntitySet="Attributes" />
+            <End Role="AttributeBooks" EntitySet="AttributeBooks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_BooksAttributes" Association="Self.FK_BooksAttributes">
+            <End Role="Books" EntitySet="Books" />
+            <End Role="AttributeBooks" EntitySet="AttributeBooks" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AttributesType_Attributes" Association="Self.FK_AttributesType_Attributes">
+            <End Role="Attributes" EntitySet="Attributes" />
+            <End Role="AttributeType" EntitySet="AttributeTypes" />
+          </AssociationSet>
+          <AssociationSet Name="FK_AttributeValue_Attributes" Association="Self.FK_AttributeValue_Attributes">
+            <End Role="Attributes" EntitySet="Attributes" />
+            <End Role="AttributeValue" EntitySet="AttributeValues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Books_Authors" Association="Self.FK_Books_Authors">
+            <End Role="Authors" EntitySet="Authors" />
+            <End Role="Books" EntitySet="Books" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Books_PublishedCountry" Association="Self.FK_Books_PublishedCountry">
+            <End Role="CountryPublished" EntitySet="CountryPublisheds" />
+            <End Role="Books" EntitySet="Books" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ImagePatchs_Books" Association="Self.FK_ImagePatchs_Books">
+            <End Role="Books" EntitySet="Books" />
+            <End Role="ImagePatchs" EntitySet="ImagePatchs" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="BookDatabaseModelStoreContainer" CdmEntityContainer="BookDatabaseEntities">
+          <EntitySetMapping Name="AttributeBooks">
+            <EntityTypeMapping TypeName="BookDatabaseModel.AttributeBook">
+              <MappingFragment StoreEntitySet="AttributeBooks">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="BooksId" ColumnName="BooksId" />
+                <ScalarProperty Name="AttributesId" ColumnName="AttributesId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Attributes">
+            <EntityTypeMapping TypeName="BookDatabaseModel.Attribute">
+              <MappingFragment StoreEntitySet="Attributes">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AttributeTypes">
+            <EntityTypeMapping TypeName="BookDatabaseModel.AttributeType">
+              <MappingFragment StoreEntitySet="AttributeType">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="AttributeValues">
+            <EntityTypeMapping TypeName="BookDatabaseModel.AttributeValue">
+              <MappingFragment StoreEntitySet="AttributeValue">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="value" ColumnName="value" />
+                <ScalarProperty Name="AttributeId" ColumnName="AttributeId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Authors">
+            <EntityTypeMapping TypeName="BookDatabaseModel.Author">
+              <MappingFragment StoreEntitySet="Authors">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="FullName" ColumnName="FullName" />
+                <ScalarProperty Name="DateBirth" ColumnName="DateBirth" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Books">
+            <EntityTypeMapping TypeName="BookDatabaseModel.Book">
+              <MappingFragment StoreEntitySet="Books">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Price" ColumnName="Price" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="PagesCount" ColumnName="PagesCount" />
+                <ScalarProperty Name="CountryPublishedId" ColumnName="CountryPublishedId" />
+                <ScalarProperty Name="AuthorsId" ColumnName="AuthorsId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="CountryPublisheds">
+            <EntityTypeMapping TypeName="BookDatabaseModel.CountryPublished">
+              <MappingFragment StoreEntitySet="CountryPublished">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+                <ScalarProperty Name="IsoCode" ColumnName="IsoCode" />
+                <ScalarProperty Name="PhoneCode" ColumnName="PhoneCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ImagePatchs">
+            <EntityTypeMapping TypeName="BookDatabaseModel.ImagePatch">
+              <MappingFragment StoreEntitySet="ImagePatchs">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="ImageUrl" ColumnName="ImageUrl" />
+                <ScalarProperty Name="BooksId" ColumnName="BooksId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
