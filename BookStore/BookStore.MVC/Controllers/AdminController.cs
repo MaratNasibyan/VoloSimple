@@ -7,6 +7,7 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using BookStore.Entities;
+using System.IO;
 
 namespace BookStore.MVC.Controllers
 {
@@ -53,17 +54,25 @@ namespace BookStore.MVC.Controllers
         {
             if (ModelState.IsValid)
             {
-
                 if (upload != null && upload.ContentLength > 0)
                 {
+                   
+
+                    //    upload = Request.Files["upload"];
+                    string filename = Path.GetFileName(upload.FileName);
+                    string patch = Path.Combine(Server.MapPath("~/Images"), filename);
+                    upload.SaveAs(patch);
                     var photo = new ImagePatch
                     {
                         ImageUrl = System.IO.Path.GetFileName(upload.FileName),
-                       
+
                     };
                     book.ImagePatchs = new List<ImagePatch>();
                     book.ImagePatchs.Add(photo);
                 }
+                   // upload.SaveAs(System.IO.Path.Combine(directory, photo.ImageUrl));
+                  
+                
 
                 db.Books.Add(book);
                 db.SaveChanges();
